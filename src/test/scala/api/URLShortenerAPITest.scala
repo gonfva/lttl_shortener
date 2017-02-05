@@ -76,7 +76,7 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
     "When we visit root, we get a page" in {
       Get("/") ~> api.route ~> check {
         response.status shouldBe StatusCodes.OK
-        responseAs[String] should include ("Hello Blackboard!")
+        responseAs[String] should include ("URL Shortener")
       }
     }
   }
