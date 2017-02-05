@@ -72,6 +72,14 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
       }
     }
   }
+  "The front-end" should {
+    "When we visit root, we get a page" in {
+      Get("/") ~> api.route ~> check {
+        response.status shouldBe StatusCodes.OK
+        responseAs[String] should include ("Hello Blackboard!")
+      }
+    }
+  }
   override def withFixture(test: NoArgTest) = {
     svc = new SimpleURLService
     api = new URLShortenerAPI {
