@@ -38,7 +38,7 @@
         box-sizing:border-box;
         -moz-box-sizing:border-box;
     }
-    #shortenButton {
+    #shortenButton, #copyButton {
         border-top-right-radius: 4px;
         border-bottom-right-radius: 4px;
         border-color: #009b00;
@@ -52,6 +52,9 @@
         box-sizing:border-box;
         -moz-box-sizing:border-box;
     }
+    #copyButton {
+        display: none;
+    }
 
     </style>
 </head>
@@ -61,10 +64,61 @@
     <div id="global">
         <div id="panel">
                <input placeholder="Enter a URL to shorten" name="url" id="inputURL"><!--
-            --><button id="shortenButton">Shorten</button>
+            --><button id="shortenButton">Shorten</button><!--
+            --><button id="copyButton">Copy</button>
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <script>
+        $('#shortenButton').click(function(){
+            waiting();
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:9000/',
+                data: '{ "url": "'+ $('#inputURL').val()+ '" }',
+                contentType:"application/json",
+                success: function (response) {
+                    console.log("Success");
+                    console.log(response);
+                    $('#inputURL').val(response);
+                    copyStatus();
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    console.log("Failure");
+                    console.log(xhr.status);
+                    alert(xhr.responseText);
+                    reset();
+                }
+            });
+
+        });
+        $('#copyButton').click(function(){
+            $('#inputURL').select();
+            try {
+                var successful = document.execCommand('copy');
+                var msg = successful ? 'successful' : 'unsuccessful';
+                console.log('Copy email command was ' + msg);
+            } catch(err) {
+                console.log('Oops, unable to copy');
+            }
+        });
+        function waiting(){
+            $('#shortenButton').text("Waiting");
+        }
+        function copyStatus(){
+            $('#inputURL').attr({type:"search"});
+            $('#shortenButton').css('display','none');
+            $('#copyButton').css('display','inline');
+        }
+        function reset(){
+            $('#shortenButton').text("Shorten");
+            $('#shortenButton').css('display','inline');
+            $('#copyButton').css('display','none');
+            $('#inputURL').attr({type:"text"});
+        }
+    </script>
 </body>
 
 </html>
