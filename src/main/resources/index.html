@@ -5,9 +5,9 @@
     <title>URL Shortener</title>
     <style>
     html,body {
-      height:100%;
-      width:100%;
-      margin:0;
+        height:100%;
+        width:100%;
+        margin:0;
     }
     body {
         display:flex;
@@ -15,11 +15,10 @@
     }
 
     #panel {
-            border-radius: 4px;
-        border-color:897e89;
+        border-radius: 4px;
+        border: solid 2px #aaaaaa;
         background-color: #644b65;
         padding:20px;
-        white-space: nowrap;
     }
 
     #global{
@@ -52,8 +51,19 @@
         box-sizing:border-box;
         -moz-box-sizing:border-box;
     }
-    #copyButton {
+    #copyButton, #clearButton {
         display: none;
+    }
+    #clearButton {
+        position: absolute;
+        margin-left: -20px;
+        font-size: 1.4em;
+        font-weight: bold;
+        cursor: pointer;
+        padding-top: 0.4em;
+    }
+    @-moz-document url-prefix() {
+         #shortenButton, #copyButton {padding:14px;}
     }
 
     </style>
@@ -64,6 +74,7 @@
     <div id="global">
         <div id="panel">
                <input placeholder="Enter a URL to shorten" name="url" id="inputURL"><!--
+            --><span id="clearButton">&times;</span><!--
             --><button id="shortenButton">Shorten</button><!--
             --><button id="copyButton">Copy</button>
         </div>
@@ -80,6 +91,7 @@
                 data: '{ "url": "'+ $('#inputURL').val()+ '" }',
                 contentType:"application/json",
                 success: function (response) {
+                    $('#inputURL').attr("type","search");
                     console.log("Success");
                     console.log(response);
                     $('#inputURL').val(response);
@@ -93,6 +105,10 @@
                 }
             });
 
+        });
+        $('#clearButton').click(function(){
+            $('#inputURL').val("");
+            reset();
         });
         $('#copyButton').click(function(){
             $('#inputURL').select();
@@ -108,15 +124,18 @@
             $('#shortenButton').text("Waiting");
         }
         function copyStatus(){
-            $('#inputURL').attr({type:"search"});
             $('#shortenButton').css('display','none');
             $('#copyButton').css('display','inline');
+            $('#clearButton').css('display','inline');
+            $('#inputURL').prop('readonly', true);
         }
         function reset(){
             $('#shortenButton').text("Shorten");
             $('#shortenButton').css('display','inline');
             $('#copyButton').css('display','none');
-            $('#inputURL').attr({type:"text"});
+            $('#clearButton').css('display','none');
+            $('#inputURL').prop('readonly', false);
+
         }
     </script>
 </body>
