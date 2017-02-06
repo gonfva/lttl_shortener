@@ -5,13 +5,13 @@ html,body {
 }
 body {
     display:flex;
-    background-color: #220023;
+    background-color: #0099cc;
 }
 
 #panel {
     border-radius: 4px;
-    border: solid 2px #aaaaaa;
-    background-color: #644b65;
+    border: solid 2px #ccffcc;
+    background-color: #66ccff;
     padding:20px;
 }
 
@@ -34,12 +34,12 @@ body {
 #shortenButton, #copyButton {
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    border-color: #009b00;
+    border-color: #003399;
     border-width: 0px;
     padding:15px;
     font-size:0.8em;
     margin-right:0px;
-    background-color: #009b00;
+    background-color: #003399;
     color: white;
     width:20%;
     box-sizing:border-box;
