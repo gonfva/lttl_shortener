@@ -1,0 +1,61 @@
+html,body {
+    height:100%;
+    width:100%;
+    margin:0;
+}
+body {
+    display:flex;
+    background-color: #220023;
+}
+
+#panel {
+    border-radius: 4px;
+    border: solid 2px #aaaaaa;
+    background-color: #644b65;
+    padding:20px;
+}
+
+#global{
+    margin:auto;
+    width:50%;
+}
+#inputURL {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-color:white;
+    padding:15px;
+    font-size:0.8em;
+    margin-left:0px;
+    border-width: 0px;
+    width:80%;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
+#shortenButton, #copyButton {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border-color: #009b00;
+    border-width: 0px;
+    padding:15px;
+    font-size:0.8em;
+    margin-right:0px;
+    background-color: #009b00;
+    color: white;
+    width:20%;
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+}
+#copyButton, #clearButton {
+    display: none;
+}
+#clearButton {
+    position: absolute;
+    margin-left: -20px;
+    font-size: 1.4em;
+    font-weight: bold;
+    cursor: pointer;
+    padding-top: 0.4em;
+}
+@-moz-document url-prefix() {
+     #shortenButton, #copyButton {padding:14px;}
+}

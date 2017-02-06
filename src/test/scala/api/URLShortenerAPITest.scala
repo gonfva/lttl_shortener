@@ -6,6 +6,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
 import org.scalatest.{Matchers, WordSpec}
 import service._
+import MediaTypes._
 
 
 /**
@@ -76,7 +77,22 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
     "When we visit root, we get a page" in {
       Get("/") ~> api.route ~> check {
         response.status shouldBe StatusCodes.OK
+        mediaType shouldBe `text/html`
         responseAs[String] should include ("URL Shortener")
+      }
+    }
+
+    "Return javascript code" in {
+      Get("/code.js") ~> api.route ~> check {
+        response.status shouldBe StatusCodes.OK
+        mediaType shouldBe `application/javascript`
+      }
+    }
+
+    "Return css code" in {
+      Get("/style.css") ~> api.route ~> check {
+        response.status shouldBe StatusCodes.OK
+        mediaType shouldBe `text/css`
       }
     }
   }

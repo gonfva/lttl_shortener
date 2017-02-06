@@ -3,70 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>URL Shortener</title>
-    <style>
-    html,body {
-        height:100%;
-        width:100%;
-        margin:0;
-    }
-    body {
-        display:flex;
-        background-color: #220023;
-    }
-
-    #panel {
-        border-radius: 4px;
-        border: solid 2px #aaaaaa;
-        background-color: #644b65;
-        padding:20px;
-    }
-
-    #global{
-        margin:auto;
-        width:50%;
-    }
-    #inputURL {
-        border-top-left-radius: 4px;
-        border-bottom-left-radius: 4px;
-        border-color:white;
-        padding:15px;
-        font-size:0.8em;
-        margin-left:0px;
-        border-width: 0px;
-        width:80%;
-        box-sizing:border-box;
-        -moz-box-sizing:border-box;
-    }
-    #shortenButton, #copyButton {
-        border-top-right-radius: 4px;
-        border-bottom-right-radius: 4px;
-        border-color: #009b00;
-        border-width: 0px;
-        padding:15px;
-        font-size:0.8em;
-        margin-right:0px;
-        background-color: #009b00;
-        color: white;
-        width:20%;
-        box-sizing:border-box;
-        -moz-box-sizing:border-box;
-    }
-    #copyButton, #clearButton {
-        display: none;
-    }
-    #clearButton {
-        position: absolute;
-        margin-left: -20px;
-        font-size: 1.4em;
-        font-weight: bold;
-        cursor: pointer;
-        padding-top: 0.4em;
-    }
-    @-moz-document url-prefix() {
-         #shortenButton, #copyButton {padding:14px;}
-    }
-
-    </style>
+    <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 
 <body>
@@ -81,63 +18,8 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="code.js"></script>
 
-    <script>
-        $('#shortenButton').click(function(){
-            waiting();
-            $.ajax({
-                type: "POST",
-                url: 'http://localhost:9000/',
-                data: '{ "url": "'+ $('#inputURL').val()+ '" }',
-                contentType:"application/json",
-                success: function (response) {
-                    $('#inputURL').attr("type","search");
-                    console.log("Success");
-                    console.log(response);
-                    $('#inputURL').val(response);
-                    copyStatus();
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    console.log("Failure");
-                    console.log(xhr.status);
-                    alert(xhr.responseText);
-                    reset();
-                }
-            });
-
-        });
-        $('#clearButton').click(function(){
-            $('#inputURL').val("");
-            reset();
-        });
-        $('#copyButton').click(function(){
-            $('#inputURL').select();
-            try {
-                var successful = document.execCommand('copy');
-                var msg = successful ? 'successful' : 'unsuccessful';
-                console.log('Copy email command was ' + msg);
-            } catch(err) {
-                console.log('Oops, unable to copy');
-            }
-        });
-        function waiting(){
-            $('#shortenButton').text("Waiting");
-        }
-        function copyStatus(){
-            $('#shortenButton').css('display','none');
-            $('#copyButton').css('display','inline');
-            $('#clearButton').css('display','inline');
-            $('#inputURL').prop('readonly', true);
-        }
-        function reset(){
-            $('#shortenButton').text("Shorten");
-            $('#shortenButton').css('display','inline');
-            $('#copyButton').css('display','none');
-            $('#clearButton').css('display','none');
-            $('#inputURL').prop('readonly', false);
-
-        }
-    </script>
 </body>
 
 </html>

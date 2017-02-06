@@ -39,6 +39,20 @@ trait URLShortenerAPI extends Protocols {
         }
       }
     } ~
+    path("code.js") {
+      get {
+        logRequest(("index", Logging.InfoLevel)) {
+          getFromResource("code.js")
+        }
+      }
+    } ~
+    path("style.css") {
+      get {
+        logRequest(("index", Logging.InfoLevel)) {
+          getFromResource("style.css")
+        }
+      }
+    } ~
     path(Remaining) { shortURL =>
       get {
         logRequest(("expand", Logging.InfoLevel)) {
