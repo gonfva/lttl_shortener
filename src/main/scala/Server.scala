@@ -17,20 +17,23 @@
 import akka.actor.ActorSystem
 import akka.event.Logging
 import akka.http.scaladsl.Http
+import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.RouteConcatenation._
 import akka.stream.ActorMaterializer
-import api.URLApiWithMockService
+import api.{StaticFilesAPI, URLApiWithMockService}
 import com.typesafe.config.ConfigFactory
 
 /*
  * Main object server
  */
-object Server extends App with URLApiWithMockService {
+object Server extends App with URLApiWithMockService with StaticFilesAPI {
   implicit val system = ActorSystem()
   implicit val executor = system.dispatcher
   implicit val materializer = ActorMaterializer()
 
   override val config = ConfigFactory.load()
   val logger = Logging(system, getClass)
+  val route: Route = staticRoute ~ shortenerRoutes
 
   Http().bindAndHandle(route, config.getString("http.interface"), config.getInt("http.port"))
 }

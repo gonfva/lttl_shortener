@@ -45,18 +45,18 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
   "The API" should {
 
     "When a URL is submitted, a much shorter URL is returned" in {
-      Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.route ~> check {
+      Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.OK
         responseAs[String] shouldEqual "http://bit.ly/0"
       }
     }
 
     "The same input URL should always result in the same short URL" in {
-      Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.route ~> check {
+      Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.OK
         responseAs[String] shouldEqual "http://bit.ly/0"
       }
-      Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.route ~> check {
+      Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.OK
         responseAs[String] shouldEqual "http://bit.ly/0"
       }
@@ -64,7 +64,7 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
 
     "An invalid URL should result in an HTTP 400 error" in {
 
-      Post("/", HttpEntity(MediaTypes.`application/json`, ERROR_REQUEST)) ~> api.route ~> check {
+      Post("/", HttpEntity(MediaTypes.`application/json`, ERROR_REQUEST)) ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.BadRequest
         responseAs[String] shouldEqual "Not a valid URL"
       }
@@ -73,42 +73,20 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
     "When a short URL is visited, the user is redirected to the associated input URL" in {
       val result = svc.shorten(LongURL("http://gonzalo.cool"))
       assert (result.isRight)
-      Get(s"/${result.right.get.slug}") ~> api.route ~> check {
+      Get(s"/${result.right.get.slug}") ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.TemporaryRedirect
         headers.filter(_.is("location")).map(_.value()).head shouldEqual "http://gonzalo.cool"
       }
     }
 
     "If a short URL does not exist, an HTTP 404 error should be returned" in {
-      Get("/ABCD") ~> api.route ~> check {
+      Get("/ABCD") ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.NotFound
         responseAs[String] shouldEqual "URL doesn't exist"
       }
     }
   }
-  "The front-end" should {
-    "When we visit root, we get a page" in {
-      Get("/") ~> api.route ~> check {
-        response.status shouldBe StatusCodes.OK
-        mediaType shouldBe `text/html`
-        responseAs[String] should include ("URL Shortener")
-      }
-    }
 
-    "Return javascript code" in {
-      Get("/code.js") ~> api.route ~> check {
-        response.status shouldBe StatusCodes.OK
-        mediaType shouldBe `application/javascript`
-      }
-    }
-
-    "Return css code" in {
-      Get("/style.css") ~> api.route ~> check {
-        response.status shouldBe StatusCodes.OK
-        mediaType shouldBe `text/css`
-      }
-    }
-  }
   override def withFixture(test: NoArgTest) = {
     svc = new SimpleURLService
     api = new URLShortenerAPI {

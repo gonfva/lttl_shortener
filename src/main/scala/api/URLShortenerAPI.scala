@@ -30,7 +30,7 @@ import service._
 trait URLShortenerAPI extends Protocols {
   val service: URLService
   val domain: String
-  def route: Route =
+  val shortenerRoutes: Route =
     pathSingleSlash {
       post {
         logRequest(("shorten", Logging.InfoLevel)) {
@@ -42,27 +42,6 @@ trait URLShortenerAPI extends Protocols {
               }
             }
           }
-        }
-      }
-    } ~
-    pathSingleSlash {
-      get {
-        logRequest(("index", Logging.InfoLevel)) {
-          getFromResource("index.html")
-        }
-      }
-    } ~
-    path("code.js") {
-      get {
-        logRequest(("index", Logging.InfoLevel)) {
-          getFromResource("code.js")
-        }
-      }
-    } ~
-    path("style.css") {
-      get {
-        logRequest(("index", Logging.InfoLevel)) {
-          getFromResource("style.css")
         }
       }
     } ~
