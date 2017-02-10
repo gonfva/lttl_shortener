@@ -1,8 +1,9 @@
-![build status](https://travis-ci.org/gonfva/lttl_shortener.svg?branch=master)
+[![Build status](https://travis-ci.org/gonfva/lttl_shortener.svg?branch=master')](https://travis-ci.org/gonfva/lttl_shortener?branch=master)
 
 # lttl shortener
 
 A web address shortener written in Scala. It started as a coding exercise. 
+Please see the LICENSE for copyright information.
 
 ![image of the project frontend](./example_lttl.png)
 
@@ -21,7 +22,3 @@ The better way to build is generate a docker container.
 once you've built the project, you can run the container with
 
 `docker run -d -p 9000:9000 lttl-web-address-shortener:1.0`
-
-
-Copyright 2017 Gonzalo Fernandez-Victorio
-
