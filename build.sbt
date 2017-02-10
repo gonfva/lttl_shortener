@@ -20,3 +20,10 @@ initialize := {
   if (sys.props("java.specification.version") != "1.8")
     sys.error("Java 8 is required for this project.")
 }
+
+enablePlugins(JavaServerAppPackaging)
+
+dockerExposedPorts := Seq(9000)
+maintainer in Docker  := "Gonzalo Fernandez-Victorio"
+packageName in Docker := name.value
+version in Docker     := version.value
