@@ -1,6 +1,6 @@
-# lttl shortener
-
 ![build status](https://travis-ci.org/gonfva/lttl_shortener.svg?branch=master)
+
+# lttl shortener
 
 A web address shortener written in Scala. It started as a coding exercise. 
 

@@ -1,6 +1,6 @@
 import sbt._
 
-name := "blackboard coding test"
+name := "lttl - web address shortener"
 
 version := "1.0"
 
