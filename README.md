@@ -22,3 +22,5 @@ The better way to build is generate a docker container.
 once you've built the project, you can run the container with
 
 `docker run -d -p 9000:9000 lttl-web-address-shortener:1.0`
+
+And then visit http://localhost:9000
