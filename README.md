@@ -1,4 +1,4 @@
-[![Build status](https://travis-ci.org/gonfva/lttl_shortener.svg?branch=master')](https://travis-ci.org/gonfva/lttl_shortener?branch=master)
+[![Build status](https://travis-ci.org/gonfva/lttl_shortener.svg?branch=master)](https://travis-ci.org/gonfva/lttl_shortener?branch=master)
 
 # lttl shortener
 
