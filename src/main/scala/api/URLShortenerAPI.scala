@@ -15,6 +15,7 @@
   **/
 package api
 
+import scala.util.{Success, Failure}
 import akka.event.Logging
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.StatusCodes._
@@ -35,11 +36,10 @@ trait URLShortenerAPI extends Protocols {
       post {
         logRequest(("shorten", Logging.InfoLevel)) {
           entity(as[LongURL]) { longURL =>
-            complete {
-              service.shorten(longURL) match {
-                case Left(msg) => (BadRequest, msg)
-                case Right(slug) => slugToURL(slug)
-              }
+            onComplete(service.shorten(longURL)) {
+                case Failure(ex) => complete(BadRequest, ex.getMessage)
+                case Success(slug) => complete(slugToURL(slug))
+
             }
           }
         }
@@ -48,9 +48,9 @@ trait URLShortenerAPI extends Protocols {
     path(Remaining) { shortURL =>
       get {
         logRequest(("expand", Logging.InfoLevel)) {
-          service.expand(Slug(shortURL)) match {
-            case Left(msg) => complete(NotFound, msg)
-            case Right(expanded) => redirect(expanded.url, TemporaryRedirect)
+          onComplete(service.expand(Slug(shortURL))) {
+            case Failure(msg) => complete(NotFound, msg.getMessage)
+            case Success(expanded) => redirect(expanded.url, TemporaryRedirect)
           }
         }
       }
@@ -61,7 +61,7 @@ trait URLShortenerAPI extends Protocols {
   }
 }
 
-trait URLApiWithMockService extends URLShortenerAPI {
+trait URLApiWithSimpleService extends URLShortenerAPI {
   val config: Config
   val service = new SimpleURLService
   lazy val domain = config.getString("http.external_domain")

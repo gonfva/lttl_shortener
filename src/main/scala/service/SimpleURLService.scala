@@ -19,6 +19,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 import utils.NumberToSlug
 
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
 /**
   * Simple class to provide in memory functionality
   */
@@ -37,13 +40,19 @@ class SimpleURLService extends URLService {
     Slug(newSlugRef)
   }
 
-  override def shorten(longUrl: LongURL): Either[String, Slug] = {
-    checkValid(longUrl).right.map { url =>
+  override def shorten(longUrl: LongURL): Future[Slug] = {
+    checkValid(longUrl).map { url =>
       mapURLSlug.get(url).map(Slug(_)).getOrElse(createSlug(longUrl))
     }
   }
 
-  override def expand(shortUrl: Slug): Either[String, LongURL] = {
-    mapSlugURL.get(shortUrl.slug).toRight("URL doesn't exist").right.map(url => LongURL(url))
+  override def expand(shortUrl: Slug): Future[LongURL] = {
+    Future(
+      mapSlugURL.
+        get(shortUrl.slug).
+        map(_.toString).
+        map(url => LongURL(url)).
+        getOrElse(throw new Exception("URL doesn't exist"))
+    )
   }
 }

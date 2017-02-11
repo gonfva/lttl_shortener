@@ -21,7 +21,7 @@ package service
 class SimpleURLServiceTest extends URLServiceTest {
   override var service: URLService = _
 
-  override def withFixture(test: NoArgTest) = {
+  override def withFixture(test: NoArgAsyncTest) = {
     service = new SimpleURLService
     super.withFixture(test)
   }

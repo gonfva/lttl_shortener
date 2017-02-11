@@ -20,13 +20,13 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.RouteConcatenation._
 import akka.stream.ActorMaterializer
-import api.{StaticFilesAPI, URLApiWithMockService}
+import api.{StaticFilesAPI, URLApiWithSimpleService}
 import com.typesafe.config.ConfigFactory
 
 /*
  * Main object server
  */
-object Server extends App with URLApiWithMockService with StaticFilesAPI {
+object Server extends App with URLApiWithSimpleService with StaticFilesAPI {
   implicit val system = ActorSystem()
   implicit val executor = system.dispatcher
   implicit val materializer = ActorMaterializer()

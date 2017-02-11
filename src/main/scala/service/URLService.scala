@@ -17,6 +17,9 @@ package service
 
 import java.net.URL
 
+import java.net.MalformedURLException
+
+import scala.concurrent.Future
 import scala.util.{Success, Try}
 
 /**
@@ -24,15 +27,15 @@ import scala.util.{Success, Try}
   *
   */
 trait URLService {
-  def checkValid(longURL: LongURL): Either[String, String] = {
+  def checkValid(longURL: LongURL): Future[String] = {
     try {
       new URL(longURL.url)
-      Right(longURL.url)
+      Future.successful(longURL.url)
     } catch {
-      case e: Exception =>
-        Left("Not a valid URL")
+      case e: MalformedURLException =>
+        Future.failed(e)
     }
   }
-  def shorten(longUrl: LongURL): Either[String, Slug]
-  def expand(slug: Slug): Either[String, LongURL]
+  def shorten(longUrl: LongURL): Future[Slug]
+  def expand(slug: Slug): Future[LongURL]
 }

@@ -15,19 +15,17 @@
   **/
 package api
 
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.{HttpEntity, MediaTypes, StatusCodes}
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.util.ByteString
-import org.scalatest.{Matchers, WordSpec}
+import org.scalatest.{AsyncWordSpec, Matchers}
 import service._
-import MediaTypes._
 
 
 /**
   * Test for the API specification. Brought directly from the README file
   */
-class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest {
+class URLShortenerAPITest extends AsyncWordSpec with Matchers with ScalatestRouteTest {
   var api: URLShortenerAPI = _
   var svc: URLService = _
   val OK_REQUEST = ByteString(
@@ -46,7 +44,7 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
 
     "When a URL is submitted, a much shorter URL is returned" in {
       Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.shortenerRoutes ~> check {
-        response.status shouldBe StatusCodes.OK
+        status shouldEqual StatusCodes.OK
         responseAs[String] shouldEqual "http://bit.ly/0"
       }
     }
@@ -56,6 +54,7 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
         response.status shouldBe StatusCodes.OK
         responseAs[String] shouldEqual "http://bit.ly/0"
       }
+
       Post("/", HttpEntity(MediaTypes.`application/json`, OK_REQUEST)) ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.OK
         responseAs[String] shouldEqual "http://bit.ly/0"
@@ -66,17 +65,19 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
 
       Post("/", HttpEntity(MediaTypes.`application/json`, ERROR_REQUEST)) ~> api.shortenerRoutes ~> check {
         response.status shouldBe StatusCodes.BadRequest
-        responseAs[String] shouldEqual "Not a valid URL"
+        responseAs[String] shouldEqual "unknown protocol: htt"
       }
     }
 
     "When a short URL is visited, the user is redirected to the associated input URL" in {
       val result = svc.shorten(LongURL("http://gonzalo.cool"))
-      assert (result.isRight)
-      Get(s"/${result.right.get.slug}") ~> api.shortenerRoutes ~> check {
-        response.status shouldBe StatusCodes.TemporaryRedirect
-        headers.filter(_.is("location")).map(_.value()).head shouldEqual "http://gonzalo.cool"
+      result.map { res =>
+        Get(s"/${res.slug}") ~> api.shortenerRoutes ~> check {
+          response.status shouldBe StatusCodes.TemporaryRedirect
+          headers.filter(_.is("location")).map(_.value()).head shouldEqual "http://gonzalo.cool"
+        }
       }
+
     }
 
     "If a short URL does not exist, an HTTP 404 error should be returned" in {
@@ -87,7 +88,7 @@ class URLShortenerAPITest extends WordSpec with Matchers with ScalatestRouteTest
     }
   }
 
-  override def withFixture(test: NoArgTest) = {
+  override def withFixture(test: NoArgAsyncTest) = {
     svc = new SimpleURLService
     api = new URLShortenerAPI {
       override val domain: String = "http://bit.ly/"
