@@ -15,7 +15,7 @@ Please see the LICENSE for copyright information.
 
 ## How to build/run it
 
-The better way to build is generate a docker container.
+The better way to build is generate a docker image.
 
 `sbt docker:publishLocal`
 
@@ -23,4 +23,4 @@ once you've built the project, you can run the container with
 
 `docker run -d -p 9000:9000 lttl-web-address-shortener:1.0`
 
-And then visit http://localhost:9000
+and then visit http://localhost:9000
