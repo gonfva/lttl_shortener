@@ -27,6 +27,11 @@ import scala.util.{Success, Try}
   *
   */
 trait URLService {
+  def shorten(longUrl: LongURL): Future[Slug]
+  def expand(slug: Slug): Future[LongURL]
+}
+
+trait Validator {
   def checkValid(longURL: LongURL): Future[String] = {
     try {
       new URL(longURL.url)
@@ -36,6 +41,4 @@ trait URLService {
         Future.failed(e)
     }
   }
-  def shorten(longUrl: LongURL): Future[Slug]
-  def expand(slug: Slug): Future[LongURL]
 }

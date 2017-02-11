@@ -25,7 +25,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Simple class to provide in memory functionality
   */
-class SimpleURLService extends URLService {
+class SimpleURLService extends URLService with Validator {
   val mapSlugURL = scala.collection.mutable.HashMap.empty[String,String]
   val mapURLSlug = scala.collection.mutable.HashMap.empty[String,String]
 

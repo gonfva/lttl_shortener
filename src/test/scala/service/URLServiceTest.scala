@@ -29,17 +29,6 @@ abstract class URLServiceTest extends AsyncFlatSpec {
   private val BAD_URL = "htt://www.google.com"
   private val GOOD_URL = "http://www.google.com"
 
-  it should "validate a correct URL" in {
-    val futResult = service.checkValid(LongURL(GOOD_URL))
-    futResult.map(_ => assert(true))
-  }
-
-  it should "flag a wrong URL" in {
-    recoverToSucceededIf[MalformedURLException] {
-      service.checkValid(LongURL(BAD_URL))
-    }
-  }
-
   it should "fail to shorten a wrong URL" in {
     recoverToSucceededIf[MalformedURLException] {
       service.shorten(LongURL(BAD_URL))
